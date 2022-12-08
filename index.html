@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Compound Calculator</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100vw;
+        height: 100vh;
+        align-items: center;
+        background-color: #5cdb94;
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+      }
+      .header {
+        display: flex;
+        justify-content: center;
+        width: 50%;
+        background-color: #05396b;
+        padding: 16px;
+      }
+      .title {
+        color: aliceblue;
+        display: flex;
+        align-items: center;
+      }
+      .container {
+        display: flex;
+        justify-content: center;
+        width: 50%;
+        padding: 16px;
+      }
+      .data-input {
+        display: grid;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: 0px;
+        height: 100%;
+      }
+      #net-profit-calculator {
+        background-color: #05396b;
+        color: #5cdb94;
+        border: none;
+        padding: 4px;
+        border-radius: 2px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <span class="header"><h1 class="title">Compound Calculator</h1></span>
+      <div class="container">
+        <div class="data-input">
+          <div>Invest</div>
+          <div>
+            <input
+              id="invest-amount"
+              type="number"
+              placeholder="100"
+              value="100"
+            />
+          </div>
+          <div>Stop Loss</div>
+          <div>
+            <input
+              id="stop-loss-pip"
+              type="number"
+              placeholder="40"
+              value="40"
+            />
+          </div>
+          <div>Take Profit</div>
+          <div>
+            <input
+              id="take-profit-pip"
+              type="number"
+              placeholder="20"
+              value="20"
+            />
+          </div>
+          <div>Win Trade</div>
+          <div>
+            <input
+              id="win-trade-number"
+              type="number"
+              placeholder="5"
+              value="5"
+            />
+          </div>
+          <div><button id="net-profit-calculator">Get End Balance</button></div>
+          <div id="net-profit-amount">$0</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const netProfitCalculatorEle = document.getElementById(
+        "net-profit-calculator"
+      );
+
+      const calculateProfit = () => {
+        let investAmount = Number(
+          document.getElementById("invest-amount").value
+        );
+        let stopLoss = Number(document.getElementById("stop-loss-pip").value);
+        let takeProfit = Number(
+          document.getElementById("take-profit-pip").value
+        );
+        let winTrade = Number(
+          document.getElementById("win-trade-number").value
+        );
+        let netProfit = document.getElementById("net-profit-amount");
+
+        let roi = getRoi(stopLoss, takeProfit);
+        let totalProfit = 0;
+        for (i = 0; i < winTrade; i++) {
+          console.log("investAmount start = ", investAmount);
+          let profit = getProfit(investAmount, roi);
+          console.log("profit = ", profit);
+          totalProfit = investAmount + profit;
+          console.log("totalProfit = ", totalProfit);
+          investAmount = investAmount + totalProfit;
+          console.log("investAmount end = ", investAmount);
+        }
+
+        netProfit.innerHTML = "$" + investAmount.toFixed(2);
+      };
+
+      const getRoi = (stopLoss, takeProfit) => {
+        return takeProfit / stopLoss;
+      };
+
+      const getProfit = (investAmount, roi) => {
+        return investAmount * roi;
+      };
+
+      netProfitCalculatorEle.addEventListener("click", calculateProfit);
+    </script>
+  </body>
+</html>
